@@ -1,0 +1,138 @@
+<html>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<style> 
+#tooltip{
+	opacity:0;
+	position: absolute;
+	text-align: right;
+	width: 60px;
+	height 40px;
+	background; yellow;
+	border: 1px; 
+
+}
+
+rect {stroke: black; }
+
+</style>
+<body onload='init()'>
+<svg width=850 height=1000>
+</svg>
+
+<div id="tooltip"></div>
+
+<script>
+// Horizontal bar chart implementation based on tutorial given here: https://d3-graph-gallery.com/graph/barplot_horizontal.html
+async function init() {
+
+//const data = await d3.csv('https://flunky.github.io/cars2017.csv');
+//const data = await d3.csv('https://github.com/ndarosa2/Visualization_Project/blob/main/prepped_youtube_top_50_most_subscribed_7_21_2022.csv');
+var data = await d3.csv('prepped_youtube_top_50_most_subscribed_7_21_2022.csv');
+console.log(data)
+var chart_width = 500;
+var chart_height = 900;
+var chart_margin_top = 50;
+var chart_margin_left = 200
+// Make array from 1 to 50 for the ranking 
+var rank = [];
+for (let i = 1; i <= 50; i++) {
+        rank.push(i);
+}
+
+// var category_colors_map = new Map(["Music","red"],["Education","black"],["Entertainment","navy"],["Gaming","green"],["Film","olive"],["Sports","purple"],["How-to","gold"],["News Channel","lime"],["Comedy","darkorange"]);
+
+var category_colors_object = {"Music":"red","Education":"black","Entertainment":"navy","Gaming":"green","Film":"olive","Sports":"purple","How-to":"gold","News Channel":"lime","Comedy":"darkorange"};
+//Create the scales
+var x = d3.scaleLinear().domain([0,240]).range([0,chart_width]);
+var y = d3.scaleBand().domain(data.map(function(d) { return d.Channel;})).range([0,chart_height]).padding(0.2);
+
+// Create variable for the tooltip and create mousover and mouseout functions-  implementation based on CS416 lecture video 8-3-2 "D3 Events"
+var tooltip = d3.select("#tooltip");
+
+// Getting an error when style("left"..) of tooltip when try to use d.Subscribers_Millions for calculating px value, so make an array with those values insted
+var subscribers = [];
+for (let i = 1; i <= 50; i++) {
+	var testy = data[i];
+	//var testy_sub = testy.Rank;
+        //subscribers.push(data[i]);
+}
+console.log(subscribers);
+
+// Translate the origin and then plot the bar chart
+// The transition is applied to the attributes after its appearance
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.selectAll("rect").data(data).enter().append("rect")
+.attr("x", function(d,i) {return x(0);})
+.attr("y",function(d,i) {return y(d.Channel);})
+//.transition().duration(2000).delay(1000)
+.attr("width", function(d,i) {return x(parseFloat(d.Subscribers_Millions));})
+.attr("height",y.bandwidth())
+.attr("fill", function(d,i) {return category_colors_object[d.Category];})
+.on("mouseover",function(d,i){
+	tooltip.style("opacity",1)
+		//.style("left",function(d,i) {return String(parseInt(x(parseFloat(d.Subscribers_Millions))))+"px";})
+		.style("left",function(d,i) {return x(300)+"px";})
+		.style("top",(d3.event.pageY)+"px")
+		.style("background", "yellow")
+		.style("width",100)
+		.style("height",40)
+		.style(	"text-align", "left")
+		.html("Rank:"+ d.Rank+"\n" +"Subscribers:"+d.Subscribers_Millions );
+	 console.log( d3.event.pageY, (d3.event.pageY)+"px",String(parseInt(x(d.Subscribers_Millions)))+"px" );
+	})
+.on("mouseout", function() { tooltip.style("opacity",0)});
+// .attr("y",function(d,i) {return 10*y(parseInt(d.Rank));})
+
+//Create the Y axis
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.style("font-size", 12)
+.call(d3.axisLeft(y));
+
+// Create the X axis 
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+(chart_height+chart_margin_top)+")")
+.style("font-size", 13)
+.call(d3.axisBottom(x).tickFormat(d3.format("~s")));
+
+// Create X axis label. Implementation based on https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
+  d3.select("svg").append("text")             	
+      .attr("transform",
+            "translate(" + (chart_width/2+chart_margin_left) + " ," + 
+                           (chart_height + chart_margin_top + 40) + ")")
+      .style("text-anchor", "middle")
+      .text("Number of Subscribers (Millions)");
+
+// Create the legend - based off of implementation found here: https://d3-graph-gallery.com/graph/custom_legend.html
+
+var category = ["Music","Education","Entertainment","Gaming","Film","Sports","How-to","News Channel","Comedy"];
+var colors = ["red","black","navy","green","olive","purple","gold","lime","darkorange"];
+
+// Add a rectangle in the legend for each category.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.selectAll("rect").data(colors).enter().append("rect")
+    .attr("x", 350)
+    .attr("y", function(d,i){ return 400 + i*25;}) 
+    .attr("width", 20)
+    .attr("height",10)
+    .attr("fill", function(d,i){ return colors[i];});
+
+// Add some text in the legend for each category.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+ .selectAll("text").data(category).enter().append("text")
+    .attr("x", 380)
+    .attr("y", function(d,i){ return 410 + i*25;})
+    .text(function(d,i){ return category[i];})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+
+}
+
+
+
+</script>
+</body>
+</html>
