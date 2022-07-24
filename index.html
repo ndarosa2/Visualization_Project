@@ -1,5 +1,6 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 <style> 
 #tooltip{
 	opacity:0;
@@ -11,8 +12,6 @@
 	border: 1px; 
 
 }
-
-rect {stroke: black; }
 
 </style>
 <body onload='init()'>
@@ -39,9 +38,9 @@ for (let i = 1; i <= 50; i++) {
         rank.push(i);
 }
 
-// var category_colors_map = new Map(["Music","red"],["Education","black"],["Entertainment","navy"],["Gaming","green"],["Film","olive"],["Sports","purple"],["How-to","gold"],["News Channel","lime"],["Comedy","darkorange"]);
+// var category_colors_map = new Map(["Music","red"],["Education","black"],["Entertainment","navy"],["Gaming","green"],["Film","olive"],["Sports","purple"],["How-to","gold"],["News Channel","darkorange"],["Comedy","lime"]);
 
-var category_colors_object = {"Music":"red","Education":"black","Entertainment":"navy","Gaming":"green","Film":"olive","Sports":"purple","How-to":"gold","News Channel":"lime","Comedy":"darkorange"};
+var category_colors_object = {"Music":"red","Education":"black","Entertainment":"navy","Gaming":"green","Film":"olive","Sports":"purple","How-to":"gold","News Channel":"darkorange","Comedy":"lime"};
 //Create the scales
 var x = d3.scaleLinear().domain([0,240]).range([0,chart_width]);
 var y = d3.scaleBand().domain(data.map(function(d) { return d.Channel;})).range([0,chart_height]).padding(0.2);
@@ -49,8 +48,15 @@ var y = d3.scaleBand().domain(data.map(function(d) { return d.Channel;})).range(
 // Create variable for the tooltip and create mousover and mouseout functions-  implementation based on CS416 lecture video 8-3-2 "D3 Events"
 var tooltip = d3.select("#tooltip");
 
-// Getting an error when style("left"..) of tooltip when try to use d.Subscribers_Millions for calculating px value, so make an array with those values insted
-var subscribers = [];
+// Getting an error when style("left"..) of tooltip when try to use d.Subscribers_Millions for calculating px value, so make an array with those values instead
+// var subscribers = [];
+
+var subscribers = [221,139,138,111,99.3,98.4,98.2,89.7,86.1,84,77,75.4,72.7,69.9,69.6,69.5,67.6,65.8,62.9,61,59,57.9,57.4,57.4,55.6,54.6,53.1,52.8,52.6,52.4,52.1,52.1,51.9,51.6,51.3,
+49.5,47.2,46.9,46,46,45.6,45.1,45.1,44.3,43.9,43.8,43.3,43.2,43.1];
+
+
+
+
 for (let i = 1; i <= 50; i++) {
 	var testy = data[i];
 	//var testy_sub = testy.Rank;
@@ -60,28 +66,33 @@ console.log(subscribers);
 
 // Translate the origin and then plot the bar chart
 // The transition is applied to the attributes after its appearance
-d3.select("svg")
-.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
-.selectAll("rect").data(data).enter().append("rect")
-.attr("x", function(d,i) {return x(0);})
-.attr("y",function(d,i) {return y(d.Channel);})
-//.transition().duration(2000).delay(1000)
-.attr("width", function(d,i) {return x(parseFloat(d.Subscribers_Millions));})
-.attr("height",y.bandwidth())
-.attr("fill", function(d,i) {return category_colors_object[d.Category];})
-.on("mouseover",function(d,i){
+
+// save a variable as svg because the transtion method applied to everything after it which makes it so mouseover does not work. 
+// append all the rectangles
+var svg = d3.select("svg").append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")").selectAll("rect").data(data).enter().append("rect");
+
+// set x and y coordinates and width of the rectangles
+svg.attr("x", function(d,i) {return x(0);}).attr("y",function(d,i) {return y(d.Channel);}).attr("height",y.bandwidth()).attr("fill", function(d,i) {return category_colors_object[d.Category];}).attr("stroke","black");
+
+// do a transition for the width of the rectangles so they grow
+svg.transition().duration(4000).delay(500).attr("width", function(d,i) {return x(parseFloat(d.Subscribers_Millions));});
+
+// setup the mouseover and mouseout events
+svg.on("mouseover",function(d,i){
 	tooltip.style("opacity",1)
 		//.style("left",function(d,i) {return String(parseInt(x(parseFloat(d.Subscribers_Millions))))+"px";})
-		.style("left",function(d,i) {return x(300)+"px";})
+		.style("left",x(0)+x(subscribers[i])+240+"px") // draw text at where right corner of rect is at plus a buffer of 240 pixels
+		//.style("left",350+"px")
 		.style("top",(d3.event.pageY)+"px")
-		.style("background", "yellow")
-		.style("width",100)
+		.style("background", "Khaki")
+		.style("width",140)
 		.style("height",40)
+		.style("border","4px")
 		.style(	"text-align", "left")
-		.html("Rank:"+ d.Rank+"\n" +"Subscribers:"+d.Subscribers_Millions );
-	 console.log( d3.event.pageY, (d3.event.pageY)+"px",String(parseInt(x(d.Subscribers_Millions)))+"px" );
+		.html("Rank:"+ d.Rank+"\n" +"Subscribers:"+d.Subscribers_Millions + " M");
+	 console.log( d3.event.pageY, (d3.event.pageY)+"px", x(subscribers[i])+x(0)+x(subscribers[i])+140+"px");
 	})
-.on("mouseout", function() { tooltip.style("opacity",0)});
+	.on("mouseout", function() { tooltip.style("opacity",0)});
 // .attr("y",function(d,i) {return 10*y(parseInt(d.Rank));})
 
 //Create the Y axis
@@ -107,7 +118,7 @@ d3.select("svg")
 // Create the legend - based off of implementation found here: https://d3-graph-gallery.com/graph/custom_legend.html
 
 var category = ["Music","Education","Entertainment","Gaming","Film","Sports","How-to","News Channel","Comedy"];
-var colors = ["red","black","navy","green","olive","purple","gold","lime","darkorange"];
+var colors = ["red","black","navy","green","olive","purple","gold","darkorange","lime"];
 
 // Add a rectangle in the legend for each category.
 d3.select("svg")
@@ -124,10 +135,46 @@ d3.select("svg")
 .append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
  .selectAll("text").data(category).enter().append("text")
     .attr("x", 380)
-    .attr("y", function(d,i){ return 410 + i*25;})
+    .attr("y", function(d,i){ return 405 + i*25;})
     .text(function(d,i){ return category[i];})
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
+
+// Make some annotations - based off of example found here https://d3-annotation.susielu.com/#introduction
+
+const type = d3.annotationCallout
+
+const annotations = [{
+  note: {
+    label: "The Indian music channel T-Series is the most subscribed YouTube channel in the world with over 200 million subscribers",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Most Subscribed Channel"
+  },
+  type:d3.annotationCallout,
+  x:560,
+  y:70,
+  dy: 150,
+  dx: 30,
+  color: "red"
+},
+{
+  note: {
+    label: "The Indian news channel Aaj Talk is the only news channel in a list dominated by music and entertainment",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Only News Channel in Top 50"
+  },
+  type:d3.annotationCallout,
+  x:320,
+  y:570,
+  dy: 120,
+  dx: 230,
+  color: "darkorange"
+}
+]
+
+
+const makeAnnotations = d3.annotation().annotations(annotations)
+d3.select("svg").append("g").call(makeAnnotations)   
 
 }
 
