@@ -1,4 +1,7 @@
 <html>
+  <head>
+    <title>Top 50 Most Subscribed YouTube Channels</title>
+  </head>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 <style> 
@@ -12,22 +15,78 @@
 	border: 1px; 
 
 }
+button {
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 2px 2px gray;
+}
 
 </style>
-<body onload='init()'>
-<svg width=850 height=1000>
-</svg>
+<body onload='pickScene(1)'>
+<h1>Top 50 Most Subscribed YouTube Channels</h1>
+<p> More than 17 years after its inception, YouTube has evolved from a virtual space for amateurs to post their<br> 
+cat videos and budget-friendly creations to a space crowded with YouTube celebrities with followings that rival<br> 
+that of mainstream media and channels run by media production studios. This interactive slideshow presents a view <br>
+into YouTube in 2022 with a focus on the most popular channels on the site. <br><br>
+
+Click the buttons to progress through the slides. <br>
+</p>
+<button id = "Scene1" onclick="pickScene(1)">1</button>
+<button id = "Scene2" onclick="pickScene(2)">2</button>
+<button id = "Scene3" onclick="pickScene(3)">3</button>
+<p>
+Mouse-over each bar to see the channels rank (1-50), subscriber count in millions, and country.<br>
+
+Currently, 24 out of the top 50 (48%) most subscribed channels are categorized as music. <br>
+</p> 
+
+<svg width=1000 height=1000></svg>
 
 <div id="tooltip"></div>
 
 <script>
-// Horizontal bar chart implementation based on tutorial given here: https://d3-graph-gallery.com/graph/barplot_horizontal.html
-async function init() {
+var scene = 2; 
 
+function pickScene(picked){
+
+	scene = picked;
+	//document.getElementsByTagName("button").style.background = "silver"; // need to iterate over the button list so just set individually instead
+    document.getElementById("Scene1").style.background = "silver";
+	document.getElementById("Scene2").style.background = "silver";
+	document.getElementById("Scene3").style.background = "silver";
+	console.log(document.getElementById("Scene1").style.background);
+    // need to clear the svg after click then repopulate
+    document.getElementsByTagName("svg")[0].innerHTML = "";
+	if(scene==1){
+	    document.getElementById("Scene1").style.background = "Khaki";
+		init1();
+		
+	}
+	if(scene==2){
+		document.getElementById("Scene2").style.background = "Khaki";
+		init2();
+	}
+	if(scene==3){
+		document.getElementById("Scene3").style.background = "Khaki";
+		init3();
+	}
+	//const list = document.getElementsByTagName("svg");
+	//console.log(list);
+   //list.getElementsByTagName("svg")[0].innerHTML = "";
+    //var g = document.getElementById('gfg');
+   // console.log(list.innerHTML);
+
+}
+// Function for the first chart
+// Horizontal bar chart implementation based on tutorial given here: https://d3-graph-gallery.com/graph/barplot_horizontal.html
+async function init1() {
 //const data = await d3.csv('https://flunky.github.io/cars2017.csv');
 //const data = await d3.csv('https://github.com/ndarosa2/Visualization_Project/blob/main/prepped_youtube_top_50_most_subscribed_7_21_2022.csv');
 var data = await d3.csv('prepped_youtube_top_50_most_subscribed_7_21_2022.csv');
-console.log(data)
+console.log(data);
 var chart_width = 500;
 var chart_height = 900;
 var chart_margin_top = 50;
@@ -85,11 +144,11 @@ svg.on("mouseover",function(d,i){
 		//.style("left",350+"px")
 		.style("top",(d3.event.pageY)+"px")
 		.style("background", "Khaki")
-		.style("width",140)
-		.style("height",40)
+		.style("width",150)
+		.style("height",60)
 		.style("border","4px")
 		.style(	"text-align", "left")
-		.html("Rank:"+ d.Rank+"\n" +"Subscribers:"+d.Subscribers_Millions + " M");
+		.html("Rank:"+ d.Rank+"\n" +"Subscribers:"+d.Subscribers_Millions + " M"+"\n" +"Country: "+d.Country );
 	 console.log( d3.event.pageY, (d3.event.pageY)+"px", x(subscribers[i])+x(0)+x(subscribers[i])+140+"px");
 	})
 	.on("mouseout", function() { tooltip.style("opacity",0)});
@@ -98,7 +157,7 @@ svg.on("mouseover",function(d,i){
 //Create the Y axis
 d3.select("svg")
 .append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
-.style("font-size", 12)
+.style("font-size", 11)
 .call(d3.axisLeft(y));
 
 // Create the X axis 
@@ -113,8 +172,16 @@ d3.select("svg")
             "translate(" + (chart_width/2+chart_margin_left) + " ," + 
                            (chart_height + chart_margin_top + 40) + ")")
       .style("text-anchor", "middle")
-      .text("Number of Subscribers (Millions)");
+      .text("Number of Subscribers (Millions)")
+	  .style("font-size", "1.25em");
 
+// Create Y axis label 
+d3.select("svg").append("text")
+		.attr("transform","translate(" + (chart_margin_left/2-65) + " ," + (chart_height/2 + chart_margin_top) + ")rotate(-90)")  
+      .style("text-anchor", "middle")
+      .text("Channel Name")
+	  .style("font-size", "1.25em");	  
+	  
 // Create the legend - based off of implementation found here: https://d3-graph-gallery.com/graph/custom_legend.html
 
 var category = ["Music","Education","Entertainment","Gaming","Film","Sports","How-to","News Channel","Comedy"];
@@ -138,11 +205,11 @@ d3.select("svg")
     .attr("y", function(d,i){ return 405 + i*25;})
     .text(function(d,i){ return category[i];})
     .attr("text-anchor", "left")
-    .style("alignment-baseline", "middle")
+    .style("alignment-baseline", "middle");
 
 // Make some annotations - based off of example found here https://d3-annotation.susielu.com/#introduction
 
-const type = d3.annotationCallout
+const type = d3.annotationCallout;
 
 const annotations = [{
   note: {
@@ -161,7 +228,190 @@ const annotations = [{
   note: {
     label: "The Indian news channel Aaj Talk is the only news channel in a list dominated by music and entertainment",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
-    title: "Only News Channel in Top 50"
+    title: "News Channels in Top 50",
+	wrap: 200
+  },
+  type:d3.annotationCallout,
+  x:320,
+  y:570,
+  dy: 120,
+  dx: 170,
+  color: "darkorange"
+}
+];
+
+
+const makeAnnotations = d3.annotation().annotations(annotations);
+d3.select("svg").append("g").call(makeAnnotations);
+
+}
+
+
+
+
+
+
+
+async function init2() {
+//const data = await d3.csv('https://flunky.github.io/cars2017.csv');
+//const data = await d3.csv('https://github.com/ndarosa2/Visualization_Project/blob/main/prepped_youtube_top_50_most_subscribed_7_21_2022.csv');
+var data2 = await d3.csv('Tseries_v_pewdiepie.csv');
+var data= await d3.csv('prepped_youtube_top_50_most_subscribed_7_21_2022.csv');
+console.log(data2);
+var chart_width = 800;
+var chart_height = 700;
+var chart_margin_top = 50;
+var chart_margin_left = 200
+// Make array from 1 to 50 for the ranking 
+var rank = [];
+for (let i = 1; i <= 50; i++) {
+        rank.push(i);
+}
+// var category_colors_object = {"Music":"red","Education":"black","Entertainment":"navy","Gaming":"green","Film":"olive","Sports":"purple","How-to":"gold","News Channel":"darkorange","Comedy":"lime"};
+var category_colors_object = {"T-Series":"red","Pewdiepie":"Green"};
+
+
+const Date = ["2015-01","2015-02","2015-03","2015-04","2015-05","2015-06","2015-07","2015-08","2015-09","2015-10","2015-11","2015-12","2016-01","2016-02","2016-03","2016-04","2016-05","2016-06","2016-07","2016-08","2016-09","2016-10",
+"2016-11","2016-12","2017-01","2017-02","2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12",
+"2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12","2020-01","2020-02","2020-03","2020-04","2020-05","2020-06","2020-07","2020-08","2020-09","2020-10","2020-11","2020-12","2021-01","2021-02",
+"2021-03","2021-04","2021-05","2021-06","2021-07","2021-08","2021-09","2021-10","2021-11","2021-12","2022-01","2022-02"];
+
+const Date_index = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85];
+const Pewdiepie_Subs_M = [33.3,34.2,35,35.7,36.4,37,37.6,38.5,39,39.6,40.2,40.7,41.4,41.9,42.6,43.1,43.7,44.9,45.9,47,47.7,48.2,49,49.4,51.8,52.9,54,54.5,54.9,55.2,56,56.7,57.2,57.4,57.7,58.1,
+58.9,60.5,61.2,61.9,62.4,63,63.8,64.8,65.8,66.6,69.1,73.5,79.5,83.5,87.6,92.4,95.3,96.3,97,98.5,100.8,101,101.3,101.7,102,102.3,102.7,103,104,104.5,105,105.5,106,106.5,107,107.5,108,108.4,
+108.7,109,109.1,109.3,109.4,109.5,109.6,109.8,109.9,110,110.5,111];
+
+const Tseries_Subs_M = [6.3,6.4,6.6,6.8,6.9,7.1,7.3,7.5,7.7,8,8.3,8.6,8.9,9.2,9.6,9.9,10.3,10.7,11,11.4,11.9,12.4,12.9,13.6,14.5,15.3,16.2,17.4,18.6,19.6,20.8,22.4,23.9,25.5,27.1,28.9,31.3,34.3,
+37.4,40.7,44,47.1,51,55.7,60.1,64.2,68.4,73.1,78.4,83.4,87.6,92.3,96.7,100.5,103.8,107.1,110.6,113.1,116,120.2,123.1,127.1,130.2,134.1,137.1,140.1,144,147.1,151,155,159,163.1,166.4,170.3,174,178.1,
+181,183.3,186,189,191.4,194.1,197.1,200,203,205.9];
+
+var subscribers = [221,139,138,111,99.3,98.4,98.2,89.7,86.1,84,77,75.4,72.7,69.9,69.6,69.5,67.6,65.8,62.9,61,59,57.9,57.4,57.4,55.6,54.6,53.1,52.8,52.6,52.4,52.1,52.1,51.9,51.6,51.3,
+49.5,47.2,46.9,46,46,45.6,45.1,45.1,44.3,43.9,43.8,43.3,43.2,43.1];
+
+console.log(Date);
+console.log(subscribers);
+
+//Create the scales
+var x = d3.scaleLinear().domain([0,85]).range([0,chart_width]);
+var y = d3.scaleLinear().domain([0,240]).range([chart_height,0]);
+
+// Create variable for the tooltip and create mousover and mouseout functions-  implementation based on CS416 lecture video 8-3-2 "D3 Events"
+var tooltip = d3.select("#tooltip");
+
+
+// Translate the origin and then plot the bar chart
+// The transition is applied to the attributes after its appearance
+
+// save a variable as svg because the transition method applied to everything after it which makes it so mouseover does not work. 
+// append all the circles
+var svg = d3.select("svg").append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")").selectAll("circle").data(Date_index).enter().append("circle");
+
+// set cx and cy coordinates and radius of the circles
+svg.attr("cx", function(d,i) {return x(d);}).attr("cy",function(d,i) {return y(Pewdiepie_Subs_M[i]);}).attr("fill", function(d,i) {return category_colors_object["Pewdiepie"];}).attr("r",2);
+
+// do a transition for the width of the rectangles so they grow
+// svg.transition().duration(4000).delay(500).attr("width", function(d,i) {return x(parseFloat(d.Subscribers_Millions));});
+
+// setup the mouseover and mouseout events
+/*
+svg.on("mouseover",function(d,i){
+	tooltip.style("opacity",1)
+		//.style("left",function(d,i) {return String(parseInt(x(parseFloat(d.Subscribers_Millions))))+"px";})
+		.style("left",x(0)+x(subscribers[i])+240+"px") // draw text at where right corner of rect is at plus a buffer of 240 pixels
+		//.style("left",350+"px")
+		.style("top",(d3.event.pageY)+"px")
+		.style("background", "Khaki")
+		.style("width",150)
+		.style("height",60)
+		.style("border","4px")
+		.style(	"text-align", "left")
+		.html("Rank:"+ d.Rank+"\n" +"Subscribers:"+d.Subscribers_Millions + " M"+"\n" +"Country: "+d.Country );
+	 console.log( d3.event.pageY, (d3.event.pageY)+"px", x(subscribers[i])+x(0)+x(subscribers[i])+140+"px");
+	})
+	.on("mouseout", function() { tooltip.style("opacity",0)});
+// .attr("y",function(d,i) {return 10*y(parseInt(d.Rank));})
+*/
+//Create the Y axis
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.style("font-size", 12)
+.call(d3.axisLeft(y));
+
+// Create the X axis 
+chart2_ticks = [0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84];
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+(chart_height+chart_margin_top)+")")
+.style("font-size", 11)
+.call(d3.axisBottom(x).tickValues(chart2_ticks).tickFormat((d, i) => Date[d]))// see tickformat tutorial here https://www.geeksforgeeks.org/d3-js-axis-tickformat-function/
+.selectAll("text")
+.attr("transform", "translate(-20,20)rotate(-65)") // rotating and translate axis tutorial found here https://d3-graph-gallery.com/graph/custom_axis.html
+; 
+
+// Create X axis label. Implementation based on https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
+  d3.select("svg").append("text")             	
+      .attr("transform",
+            "translate(" + (chart_width/2+chart_margin_left) + " ," + 
+                           (chart_height + chart_margin_top + 60) + ")")
+      .style("text-anchor", "middle")
+      .text("Date")
+	  .style("font-size", "1.25em");	
+
+// Create Y axis label 
+d3.select("svg").append("text")
+		.attr("transform","translate(" + (chart_margin_left/2) + " ," + (chart_height/2 + chart_margin_top) + ")rotate(-90)")  
+      .style("text-anchor", "middle")
+      .text("Number of Subscribers (Millions)")
+	  .style("font-size", "1.25em");	
+
+
+// Create the legend - based off of implementation found here: https://d3-graph-gallery.com/graph/custom_legend.html
+var category = ["T-Series","Pewdiepie"];
+var colors = ["red","green"];
+
+// Add a rectangle in the legend for each category.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.selectAll("rect").data(colors).enter().append("rect")
+    .attr("x", 350)
+    .attr("y", function(d,i){ return 400 + i*25;}) 
+    .attr("width", 20)
+    .attr("height",10)
+    .attr("fill", function(d,i){ return colors[i];});
+
+// Add some text in the legend for each category.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+ .selectAll("text").data(category).enter().append("text")
+    .attr("x", 380)
+    .attr("y", function(d,i){ return 405 + i*25;})
+    .text(function(d,i){ return category[i];})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle");
+
+// Make some annotations - based off of example found here https://d3-annotation.susielu.com/#introduction
+
+const type = d3.annotationCallout;
+
+const annotations = [{
+  note: {
+    label: "T-Series permanently overtook Pewdiepie on April 15,2019",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Most Subscribed Channel",
+	wrap: 200
+  },
+  type:d3.annotationCallout,
+  x:560,
+  y:70,
+  dy: 150,
+  dx: 30,
+  color: "red"
+},
+{
+  note: {
+    label: "The Indian news channel Aaj Talk is the only news channel in a list dominated by music and entertainment",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Only News Channel in Top 50",
+	wrap: 200
   },
   type:d3.annotationCallout,
   x:320,
@@ -169,17 +419,202 @@ const annotations = [{
   dy: 120,
   dx: 230,
   color: "darkorange"
+},
+{
+  note: {
+    label: "In 2019, Indian music channel T-Series and Swedish gaming and entertainment personality Pewdiepie competed to see who would first reach the milestone of 100 million subscribers. The fanbases of each channel campaigned heavily online.",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Race to 100 million",
+	wrap: 300
+  },
+  type:d3.annotationCallout,
+  x:250,
+  y:70,
+  dy: 0,
+  dx: 0,
+  color: "black"
 }
-]
+];
 
 
-const makeAnnotations = d3.annotation().annotations(annotations)
-d3.select("svg").append("g").call(makeAnnotations)   
+const makeAnnotations = d3.annotation().annotations(annotations);
+d3.select("svg").append("g").call(makeAnnotations);
 
 }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Function for the third chart
+// Horizontal bar chart implementation based on tutorial given here: https://d3-graph-gallery.com/graph/barplot_horizontal.html
+async function init3() {
+
+var data = await d3.csv('prepped_youtube_top_50_most_subscribed_7_21_2022.csv');
+console.log(data)
+var chart_width = 500;
+var chart_height = 900;
+var chart_margin_top = 50;
+var chart_margin_left = 200
+// Make array from 1 to 50 for the ranking 
+var rank = [];
+for (let i = 1; i <= 50; i++) {
+        rank.push(i);
+}
+
+var language_colors_object = {"English":"MediumSeaGreen","Hindi":"orange","Spanish":"red","Portuguese":"PeachPuff","Korean":"DodgerBlue","Bhojpuri":"gray"};
+var language = ["English","Hindi","Spanish","Portuguese","Korean","Bhojpuri"]; 
+var data = [22,15,5,4,3,1]; //language count;
+//Create the scales
+var x = d3.scaleLinear().domain([0,25]).range([0,chart_width]);
+var y = d3.scaleBand().domain(language).range([0,chart_height]).padding(0.2);
+
+// Create variable for the tooltip and create mousover and mouseout functions-  implementation based on CS416 lecture video 8-3-2 "D3 Events"
+var tooltip = d3.select("#tooltip");
+
+// Getting an error when style("left"..) of tooltip when try to use d.Subscribers_Millions for calculating px value, so make an array with those values instead
+// var subscribers = [];
+
+var subscribers = [221,139,138,111,99.3,98.4,98.2,89.7,86.1,84,77,75.4,72.7,69.9,69.6,69.5,67.6,65.8,62.9,61,59,57.9,57.4,57.4,55.6,54.6,53.1,52.8,52.6,52.4,52.1,52.1,51.9,51.6,51.3,
+49.5,47.2,46.9,46,46,45.6,45.1,45.1,44.3,43.9,43.8,43.3,43.2,43.1];
+
+
+// Translate the origin and then plot the bar chart
+// The transition is applied to the attributes after its appearance
+
+// save a variable as svg because the transtion method applied to everything after it which makes it so mouseover does not work. 
+// append all the rectangles
+var svg = d3.select("svg").append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")").selectAll("rect").data(data).enter().append("rect");
+
+// set x and y coordinates and width of the rectangles
+svg.attr("x", function(d,i) {return x(0);}).attr("y",function(d,i) {return y(language[i]);}).attr("height",y.bandwidth()).attr("fill", function(d,i) {return language_colors_object[language[i]];}).attr("stroke","black");
+
+// do a transition for the width of the rectangles so they grow
+svg.transition().duration(4000).delay(500).attr("width", function(d,i) {return x(d);});
+
+// setup the mouseover and mouseout events
+svg.on("mouseover",function(d,i){
+	tooltip.style("opacity",1)
+		//.style("left",function(d,i) {return String(x(d))+"px";})
+		.style("left",x(0)+x(d)+240+"px") // draw text at where right corner of rect is at plus a buffer of 240 pixels
+		//.style("left",350+"px")
+		.style("top",(d3.event.pageY)+"px")
+		.style("background", "Khaki")
+		.style("width",150)
+		.style("height",60)
+		.style("border","4px")
+		.style(	"text-align", "left")
+		.html("Count:"+ d+"\n" +"% of Top 50:"+(d/50*100) + "%"+"\n");
+	 console.log( d3.event.pageY, (d3.event.pageY)+"px");
+	})
+	.on("mouseout", function() { tooltip.style("opacity",0)});
+
+
+//Create the Y axis
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.style("font-size", 12)
+.call(d3.axisLeft(y));
+
+// Create the X axis 
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+(chart_height+chart_margin_top)+")")
+.style("font-size", 13)
+.call(d3.axisBottom(x).tickFormat(d3.format("~s")));
+
+// Create X axis label. Implementation based on https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
+  d3.select("svg").append("text")             	
+      .attr("transform",
+            "translate(" + (chart_width/2+chart_margin_left) + " ," + 
+                           (chart_height + chart_margin_top + 40) + ")")
+      .style("text-anchor", "middle")
+      .text("Count of Channels in Top 50")	  
+	  .style("font-size", "1.25em");
+
+// Creat Y axis label
+d3.select("svg").append("text")
+  .attr("transform","translate(" + (chart_margin_left/2) + " ," + (chart_height/2 + chart_margin_top) + ")rotate(-90)")
+      .style("text-anchor", "middle")
+      .text("Primary Language")
+	  .style("font-size", "1.25em");  
+
+// Create the legend - based off of implementation found here: https://d3-graph-gallery.com/graph/custom_legend.html
+
+var category = ["Music","Education","Entertainment","Gaming","Film","Sports","How-to","News Channel","Comedy"];
+var colors= ["MediumSeaGreen","orange","red","PeachPuff","DodgerBlue","gray"];
+var language = ["English","Hindi","Spanish","Portuguese","Korean","Bhojpuri"]; 
+
+// Add a rectangle in the legend for each category.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.selectAll("rect").data(colors).enter().append("rect")
+    .attr("x", 350)
+    .attr("y", function(d,i){ return 400 + i*25;}) 
+    .attr("width", 20)
+    .attr("height",10)
+    .attr("fill", function(d,i){ return d;});
+
+// Add some text in the legend for each language.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+ .selectAll("text").data(language).enter().append("text")
+    .attr("x", 380)
+    .attr("y", function(d,i){ return 405 + i*25;})
+    .text(function(d,i){ return d;})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+
+// Make some annotations - based off of example found here https://d3-annotation.susielu.com/#introduction
+
+const type = d3.annotationCallout;
+
+const annotations = [{
+  note: {
+    label: "English is the most common language with 44% of the top 50 channels speaking primarily in English",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Most Common Primary Language",
+	wrap: 200
+  },
+  type:d3.annotationCallout,
+  x:510,
+  y:190,
+  dy: 20,
+  dx: 10,
+  color: "MediumSeaGreen"
+},
+{
+  note: {
+    label: "Chinese languages such as Mandarin are likely missing from the list since YouTube is blocked in mainland China and the presence of YouTube competitors such as YouKu",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Absence of Chinese Languages",
+    wrap: 200
+  },
+  type:d3.annotationCallout,
+  x:420,
+  y:640,
+  dy: 0,
+  dx: 0,
+
+  color: "black"
+}
+];
+
+
+const makeAnnotations = d3.annotation().annotations(annotations);
+d3.select("svg").append("g").call(makeAnnotations)   ;
+
+}
 </script>
 </body>
 </html>
