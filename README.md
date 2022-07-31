@@ -1,5 +1,5 @@
 # Visualization_Project
-Visualization of YouTube's most subscribed channels as of July 2022 using D3.js and d3-annotation.js
+Visualization of YouTube's most subscribed channels and most viewed videos as of July 2022 using D3.js and d3-annotation.js
 
 References
 
