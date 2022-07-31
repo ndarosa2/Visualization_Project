@@ -635,33 +635,48 @@ const type = d3.annotationCallout;
 
 const annotations = [{
   note: {
-    label: "English is the most common language with 44% of the top 50 channels speaking primarily in English.",
+    label: "English and Hindi, the first and third most spoken languages in the world, dominate the list with 74% of the top 50 channels speaking primarily in English or Hindi.",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "English and Hindi Dominate",
+	wrap: 250
+  },
+  type:d3.annotationCallout,
+  x:350,
+  y:290,
+  dy: 0,
+  dx: 0,
+  color: "black"
+},
+{
+  note: {
+    label: "English is the most common top channel primary language with 44% of the top 50 channels speaking primarily in English.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "Most Common Primary Language",
-	wrap: 200
+	wrap: 250
   },
   type:d3.annotationCallout,
   x:580,
   y:110,
-  dy: 80,
+  dy: 50,
   dx: 10,
   color: "MediumSeaGreen"
 },
 {
   note: {
-    label: "Chinese languages such as Mandarin are likely missing from the list because YouTube is blocked in mainland China and because of the presence of YouTube competitors such as YouKu.",
+    label: "Chinese languages, such as Mandarin (language with the second most speakers in the world), are likely missing from the list because YouTube is blocked in mainland China and because of the presence of YouTube competitors such as YouKu.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "Absence of Chinese Languages",
-    wrap: 200
+    wrap: 250
   },
   type:d3.annotationCallout,
-  x:370,
-  y:390,
+  x:350,
+  y:450,
   dy: 0,
   dx: 0,
 
   color: "black"
 }
+
 ];
 
 
