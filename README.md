@@ -5,7 +5,7 @@ References
 
 Top 50 channels: https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels
 
-TSeries subscriber counts by month: https://socialblade.com/youtube/user/tseries/monthly
+T-Series subscriber counts by month: https://socialblade.com/youtube/user/tseries/monthly
 
 Pewdiepie subscriber counts by month: https://socialblade.com/youtube/user/pewdiepie/monthly
 
