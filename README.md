@@ -7,5 +7,5 @@ Source for top 50 channels: https://en.wikipedia.org/wiki/List_of_most-subscribe
 
 Source for TSeries subscriber counts by month: https://socialblade.com/youtube/user/tseries/monthly
 
-Source for Pewdiepie subscriber counts by month: https://socialblade.com/youtube/user/pewdiepie/monthly https://socialblade.com/youtube/user/tseries/monthly
+Source for Pewdiepie subscriber counts by month: https://socialblade.com/youtube/user/pewdiepie/monthly
 
