@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Top 50 Most Subscribed YouTube Channels</title>
+    <title>Most Popular YouTube Channels and Videos</title>
   </head>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
@@ -25,15 +25,17 @@ button {
 }
 body {
         font-family: Phantomsans, sans-serif;
+		width: 55%
 		}
 
 </style>
 <body onload='pickScene(1)'>
-<h1>Top 50 Most Subscribed YouTube Channels</h1>
-<p> More than 17 years after its inception, YouTube has evolved from a virtual space for amateurs to post their<br> 
-cat videos and budget-friendly creations to a space crowded with YouTube celebrities with followings that rival<br> 
-that of mainstream media and channels run by media production studios. This interactive slideshow presents a view <br>
-into YouTube as of July 2022 with a focus on the most popular channels on the site. <br>
+<h1>Most Popular YouTube Channels and Videos</h1>
+<p> 
+More than 17 years after its inception, YouTube has evolved from a virtual space for amateurs to post their cat 
+videos and budget-friendly creations to a space crowded with YouTube celebrities with followings that rival that
+of mainstream media and channels run by media production studios. This interactive slideshow presents a view 
+into YouTube as of July 2022 with a focus on the most popular channels and videos on the site. <br>
 
 Click the buttons to progress through the slides. <br>
 </p> 
@@ -41,6 +43,7 @@ Click the buttons to progress through the slides. <br>
 <button id = "Scene1" onclick="pickScene(1)">1</button>
 <button id = "Scene2" onclick="pickScene(2)">2</button>
 <button id = "Scene3" onclick="pickScene(3)">3</button>
+<button id = "Scene4" onclick="pickScene(4)">4</button>
 </div>
  
 <div id="svg_div">
@@ -53,7 +56,7 @@ Click the buttons to progress through the slides. <br>
 <div id="scene2_date_slider_div">
 <!-- label is just for white space so it lines up with the date axis  -->
  <label for="date_slider">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</label>
- <input type="range" min="1" max="85" value="5" step = "1" id = "date_slider" oninput="init2_remove_draw_lines(this.value)" style="width: 650px;cursor: pointer; ">
+ <input type="range" min="1" max="85" value="1" step = "1" id = "date_slider" oninput="init2_remove_draw_lines(this.value)" style="width: 650px;cursor: pointer; ">
 </div>
 
 <script>
@@ -61,7 +64,7 @@ Click the buttons to progress through the slides. <br>
 var scene = 1; 
 
 const chart_margin_top = 5;
-const chart_margin_left = 140;
+const chart_margin_left = 150;
 const chart_height = 650;
 const chart_width = 650;
 // Because of the date slider for the T-Series vs Pewdiepie scatterplot, init2() is running constantly, so store the constant arrays here
@@ -100,6 +103,7 @@ function pickScene(picked){
     document.getElementById("Scene1").style.background = "silver";
 	document.getElementById("Scene2").style.background = "silver";
 	document.getElementById("Scene3").style.background = "silver";
+	document.getElementById("Scene4").style.background = "silver";
 	//console.log(document.getElementById("Scene1").style.background);
 	
     // need to clear the svg after click then repopulate
@@ -113,7 +117,7 @@ function pickScene(picked){
 	}
 	if(scene==2){
 		document.getElementById("Scene2").style.background = "Khaki";
-		document.getElementById("scene_interaction_tip").innerHTML = "Use the date slider below the chart to examine the race to 100 million subscribers between T-Series and Pewdiepie."
+		document.getElementById("scene_interaction_tip").innerHTML = "Use the date slider below the chart to examine the race between two top channels to be the most subscribed channel in the world."
 		document.getElementById("scene2_date_slider_div").removeAttribute("hidden"); // make the slider visible again by removing the hidden attribute
 		init2();
 	}
@@ -123,11 +127,12 @@ function pickScene(picked){
 		document.getElementById("scene2_date_slider_div").hidden = "hidden"; // make the slider and the label hidden from the DOM
 		init3();
 	}
-	//const list = document.getElementsByTagName("svg");
-	//console.log(list);
-   //list.getElementsByTagName("svg")[0].innerHTML = "";
-    //var g = document.getElementById('gfg');
-   // console.log(list.innerHTML);
+	if(scene==4){
+		document.getElementById("Scene4").style.background = "Khaki";
+		document.getElementById("scene_interaction_tip").innerHTML = "Mouse-over each bar to see more details about how the top 30 most viewed videos further reflect the dominance of music."
+		document.getElementById("scene2_date_slider_div").hidden = "hidden"; // make the slider and the label hidden from the DOM
+		init4();
+	}
 
 }
 // Function for the first chart
@@ -252,7 +257,7 @@ const type = d3.annotationCallout;
 
 const annotations = [{
   note: {
-    label: "The Indian music channel T-Series is the most subscribed YouTube channel in the world with over 200 million subscribers",
+    label: "The Indian music channel T-Series is the most subscribed YouTube channel in the world with over 200 million subscribers.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "Most Subscribed Channel",
 	wrap: 200
@@ -266,7 +271,7 @@ const annotations = [{
 },
 {
   note: {
-    label: "The Indian news channel Aaj Talk is the only news channel in a list dominated by music and entertainment",
+    label: "The Indian news channel Aaj Talk is the only news channel in a list dominated by music and entertainment.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "News Channels in Top 50",
 	wrap: 200
@@ -280,7 +285,7 @@ const annotations = [{
 },
 {
   note: {
-    label: "As of July 2022, 24 out of the top 50 (48%) most subscribed channels are categorized as music",
+    label: "As of July 2022, 24 out of the top 50 (48%) most subscribed channels are categorized as music.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "Most Popular Category",
 	wrap: 200
@@ -376,13 +381,13 @@ const type = d3.annotationCallout;
 
 const annotations = [{
   note: {
-    label: "T-Series permanently overtook Pewdiepie on April 15,2019 after previously overtaking Pewdiepie for only a few days from March 27 to March 31, 2019. A month later T-Series became the first channel to reach 100 million subscribers on May 28th, 2019. Pewdiepie soon exited from the competition.",
+    label: "T-Series permanently overtook Pewdiepie on April 15, 2019 after previously overtaking Pewdiepie for only a few days from March 27 to March 31, 2019. A month later T-Series became the first channel to reach 100 million subscribers on May 28th, 2019. Pewdiepie soon exited from the competition.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "New Top Channel",
 	wrap: 300
   },
   type:d3.annotationCallout,
-  x:525,
+  x:535,
   y:400,
   dy: -70,
   dx: -60,
@@ -396,7 +401,7 @@ const annotations = [{
 	wrap: 200
   },
   type:d3.annotationCallout,
-  x:770,
+  x:780,
   y:110,
   dy: -10,
   dx: -30,
@@ -404,13 +409,13 @@ const annotations = [{
 },
 {
   note: {
-    label: "From August 15, 2013 to March 26,2019 (2050 days) Pewdiepie was the most subscribed YouTube channel. This 2050 day streak has not yet been broken.",
+    label: "From August 15, 2013 to March 26, 2019 (2050 days) Pewdiepie was the most subscribed YouTube channel. This 2050 day streak has not yet been broken.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "Longest Top Channel Streak",
 	wrap: 300
   },
   type:d3.annotationCallout,
-  x:170,
+  x:180,
   y:380,
   dy: 0,
   dx: 0,
@@ -424,7 +429,7 @@ const annotations = [{
 	wrap: 300
   },
   type:d3.annotationCallout,
-  x:170,
+  x:180,
   y:10,
   dy: 0,
   dx: 0,
@@ -630,28 +635,28 @@ const type = d3.annotationCallout;
 
 const annotations = [{
   note: {
-    label: "English is the most common language with 44% of the top 50 channels speaking primarily in English",
+    label: "English is the most common language with 44% of the top 50 channels speaking primarily in English.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "Most Common Primary Language",
 	wrap: 200
   },
   type:d3.annotationCallout,
   x:580,
-  y:100,
-  dy: 100,
+  y:110,
+  dy: 80,
   dx: 10,
   color: "MediumSeaGreen"
 },
 {
   note: {
-    label: "Chinese languages such as Mandarin are likely missing from the list since YouTube is blocked in mainland China and the presence of YouTube competitors such as YouKu",
+    label: "Chinese languages such as Mandarin are likely missing from the list because YouTube is blocked in mainland China and because of the presence of YouTube competitors such as YouKu.",
     bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
     title: "Absence of Chinese Languages",
     wrap: 200
   },
   type:d3.annotationCallout,
-  x:360,
-  y:440,
+  x:370,
+  y:390,
   dy: 0,
   dx: 0,
 
@@ -664,6 +669,168 @@ const makeAnnotations = d3.annotation().annotations(annotations);
 d3.select("svg").append("g").call(makeAnnotations)   ;
 
 }
+
+
+
+// Function for the fourth chart
+// Horizontal bar chart implementation based on tutorial given here: https://d3-graph-gallery.com/graph/barplot_horizontal.html
+async function init4() {
+
+var data = await d3.csv('most_viewed_youtube_videos_7_28_2022.csv');
+
+// Make array from 1 to 30 for the ranking 
+var rank = [];
+for (let i = 1; i <= 30; i++) {
+        rank.push(i);
+}
+
+var category_colors_object = {"Music":"red","Other":"black"};
+
+//Create the scales
+var x = d3.scaleLinear().domain([0,11.1]).range([0,chart_width]);
+var y = d3.scaleBand().domain(data.map(function(d) { return d.Video_name;})).range([0,chart_height]).padding(0.2);
+
+// Create variable for the tooltip and create mousover and mouseout functions- implementation based on CS416 lecture video 8-3-2 "D3 Events"
+var tooltip = d3.select("#tooltip");
+
+// Getting an error when style("left"..) of tooltip when try to use d.Views_B for calculating px value, so make an array with those values instead
+
+var views = [11.02,7.92,6.4,5.77,5.58,5.53,4.75,4.64,4.6,4.5,4.49,4.24,4,3.73,3.62,3.61,3.57,3.48,3.44,3.32,3.31,3.31,3.31,3.27,3.24,3.24,3.21,3.2,3.19,3.11];
+
+// Translate the origin and then plot the bar chart
+// The transition is applied to the attributes after its appearance
+
+// save a variable as svg because the transtion method applied to everything after it which makes it so mouseover does not work. 
+// append all the rectangles
+var svg = d3.select("svg").append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")").selectAll("rect").data(data).enter().append("rect");
+
+// set x and y coordinates and width of the rectangles
+svg.attr("x", function(d,i) {return x(0);}).attr("y",function(d,i) {return y(d.Video_name);}).attr("height",y.bandwidth()).attr("fill", function(d,i) {return category_colors_object[d.Category];}).attr("stroke","black");
+
+// do a transition for the width of the rectangles so they grow
+svg.transition().duration(4000).delay(300).attr("width", function(d,i) {return x(parseFloat(d.Views_B));});
+
+// setup the mouseover and mouseout events - based on tutorial given in lecture
+svg.on("mouseover",function(d,i){
+	tooltip.style("opacity",1)
+		.style("left",x(0)+x(views[i])+170+"px") // draw text at where right corner of rect is at plus a buffer of 170 pixels
+		.style("top",(d3.event.pageY)+"px")
+		.style("background", "Khaki")
+		.style("width",160)
+		.style("height",80)
+		.style("border","4px")
+		.style(	"text-align", "left")
+		.html("Rank: "+ d.Rank+"<br>" +"Views: "+d.Views_B + " B"+"<br>" +"Channel: "+d.Channel);
+	})
+	.on("mouseout", function() { tooltip.style("opacity",0)});
+
+//Create the Y axis
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.style("font-size", 10.5)
+.call(d3.axisLeft(y));
+
+// Create the X axis 
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+(chart_height+chart_margin_top)+")")
+.style("font-size", 13)
+.call(d3.axisBottom(x).tickFormat(d3.format("~s")));
+
+// Create X axis label. Implementation based on https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
+  d3.select("svg").append("text")             	
+      .attr("transform",
+            "translate(" + (chart_width/2+chart_margin_left) + " ," + 
+                           (chart_height + chart_margin_top + 40) + ")")
+      .style("text-anchor", "middle")
+      .text("Views (Billions)")
+	  .style("font-size", "1.25em");
+
+// Create Y axis label 
+d3.select("svg").append("text")
+		.attr("transform","translate(" + (chart_margin_left/2-50) + " ," + (chart_height/2 + chart_margin_top+5) + ")rotate(-90)")  
+      .style("text-anchor", "middle")
+      .text("Video Title")
+	  .style("font-size", "1.25em");	  
+	  
+// Create the legend - based off of implementation found here: https://d3-graph-gallery.com/graph/custom_legend.html
+
+var category = ["Music","Other"];
+var colors = ["red","black"];
+
+// Add a rectangle in the legend for each category.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+.selectAll("rect").data(colors).enter().append("rect")
+    .attr("x", 540)
+    .attr("y", function(d,i){ return 330 + i*25;}) 
+    .attr("width", 20)
+    .attr("height",10)
+    .attr("fill", function(d,i){ return colors[i];});
+
+// Add some text in the legend for each category.
+d3.select("svg")
+.append("g").attr("transform","translate("+chart_margin_left+","+chart_margin_top+")")
+ .selectAll("text").data(category).enter().append("text")
+    .attr("x", 570)
+    .attr("y", function(d,i){ return 335 + i*25;})
+    .text(function(d,i){ return category[i];})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle");
+
+// Make some annotations - based off of example found here https://d3-annotation.susielu.com/#introduction
+
+const type = d3.annotationCallout;
+
+const annotations = [{
+  note: {
+    label: "The English children`s song Baby Shark Dance is the most viewed YouTube video in the world with over 11 billion views.",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Most Viewed Video",
+	wrap: 200
+  },
+  type:d3.annotationCallout,
+  x:630,
+  y:25,
+  dy: 100,
+  dx: 5,
+  color: "red"
+},
+{
+  note: {
+    label: "Recipe for Disaster, an episode of the Russian children`s show Masha and the Bear, is the only non-music video in the list.",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Only Non-Music Video in Top 30",
+	wrap: 200
+  },
+  type:d3.annotationCallout,
+  x:430,
+  y:205,
+  dy: 60,
+  dx: 10,
+  color: "black",
+},
+{
+  note: {
+    label: "Music dominates the most viewed YouTube video list even more than it does the most subscribed YouTube channels list. As of July 2022, 29 out of the top 30 (97%) of the most viewed YouTube videos are music videos.",
+    bgPadding: {"top":15,"left":10,"right":10,"bottom":10},
+    title: "Most Popular Category",
+	wrap: 200
+  },
+  type:d3.annotationCallout,
+  x:500,
+  y:440,
+  dy: 0,
+  dx: 0,
+  color: "red",
+}
+];
+
+
+const makeAnnotations = d3.annotation().annotations(annotations);
+d3.select("svg").append("g").call(makeAnnotations);
+
+}
+
 
 
 
