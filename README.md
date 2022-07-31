@@ -1,4 +1,4 @@
 # Visualization_Project
 Visualization of YouTube's most subscribed channels as of July 2022 using D3.js and d3-annotation.js
 
-Data for top 50 channels taken from Wikipedia tables and converted to .csv
+Data for top 50 channels taken from Wikipedia article https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels
